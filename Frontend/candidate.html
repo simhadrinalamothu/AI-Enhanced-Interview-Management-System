@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Portal - Interview Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">🎯 Candidate Portal</div>
+        <div class="nav-user">
+            <span id="user-display">Loading...</span>
+            <button class="btn-logout" onclick="handleLogout()">Sign Out</button>
+        </div>
+    </header>
+
+    <div class="dashboard-wrapper">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2 id="candidate-welcome">Welcome, Candidate!</h2>
+                <p>Track your ongoing interview scheduling and round feedback.</p>
+            </div>
+        </div>
+
+        <!-- Profile card -->
+        <div class="glass-container panel-card" style="min-height: auto; margin-bottom: 30px; padding: 25px;">
+            <h3 style="margin-bottom: 15px;">Your Profile Details</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div>
+                    <label>Full Name</label>
+                    <p id="prof-fullname" style="font-size: 1.1rem; font-weight: 600;">-</p>
+                </div>
+                <div>
+                    <label>Skills</label>
+                    <p id="prof-skills" style="font-size: 1.1rem; font-weight: 600;">-</p>
+                </div>
+                <div>
+                    <label>Years of Experience</label>
+                    <p id="prof-exp" style="font-size: 1.1rem; font-weight: 600;">-</p>
+                </div>
+                <div>
+                    <label>Education</label>
+                    <p id="prof-edu" style="font-size: 1.1rem; font-weight: 600;">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interviews Table Panel -->
+        <div class="glass-container panel-card">
+            <div class="panel-header">
+                <h3>Scheduled Interviews & Status</h3>
+                <span id="interview-count" class="badge badge-scheduled">0 Total</span>
+            </div>
+            
+            <div class="table-wrapper">
+                <table id="interviews-table">
+                    <thead>
+                        <tr>
+                            <th>Position</th>
+                            <th>Interviewer</th>
+                            <th>Scheduled Date & Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="interviews-list-body">
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: var(--text-secondary);">Loading interviews...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- API and Page script -->
+    <script src="js/api.js?v=1.1"></script>
+    <script src="js/candidate.js?v=1.1"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Enhanced Interview Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="landing-wrapper">
+        <!-- Hero Section -->
+        <div class="landing-hero">
+            <h1>AI-Enhanced Interview Management System</h1>
+            <p>Streamline your organization's recruitment workflow. Schedule rounds, predict candidate selection probabilities using Random Forest, and generate instant AI evaluation summaries.</p>
+        </div>
+
+        <!-- Portal Type Selection -->
+        <div id="portal-selector" class="portal-grid">
+            <div class="portal-card glass-container" onclick="showAuthForm('recruiter')">
+                <div class="portal-icon">💼</div>
+                <h3>Recruiter / Admin</h3>
+                <p>Access the central dashboard, schedule interviews, view candidate metrics, run ML predictions, and generate evaluation reports.</p>
+            </div>
+            
+            <div class="portal-card glass-container" onclick="showAuthForm('interviewer')">
+                <div class="portal-icon">🎤</div>
+                <h3>Interviewer Portal</h3>
+                <p>Submit ratings, evaluate technical assessment and communication scores, write comments, and submit candidate feedback.</p>
+            </div>
+
+            <div class="portal-card glass-container" onclick="showAuthForm('candidate')">
+                <div class="portal-icon">🎓</div>
+                <h3>Candidate Portal</h3>
+                <p>Register as a candidate, log in to check your scheduled interviews, track your recruitment status, and view round updates.</p>
+            </div>
+        </div>
+
+        <!-- Auth Form Container (Hidden initially) -->
+        <div id="auth-box" class="auth-container glass-container" style="display: none;">
+            <button class="btn-close-modal" onclick="goBackToPortals()">←</button>
+            
+            <div class="auth-header">
+                <h2 id="auth-title">Recruiter Login</h2>
+                <p id="auth-subtitle">Enter your credentials to access the system</p>
+            </div>
+
+            <!-- Success/Error Messages -->
+            <div id="alert-banner" class="alert-banner"></div>
+
+            <!-- Login / Register Tab Header -->
+            <div class="tab-navigation" id="auth-tabs" style="display: none;">
+                <button class="tab-btn active" id="tab-login-btn" onclick="toggleAuthMode('login')">Login</button>
+                <button class="tab-btn" id="tab-register-btn" onclick="toggleAuthMode('register')">Register</button>
+            </div>
+
+            <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+                <!-- Common fields -->
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required placeholder="e.g. john_doe">
+                </div>
+
+                <div class="form-group" id="email-group" style="display: none;">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="e.g. john@company.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="••••••••">
+                </div>
+
+                <!-- Candidate Extra Fields -->
+                <div id="candidate-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" id="full_name" placeholder="e.g. John Doe">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="skills">Skills (Comma separated)</label>
+                        <input type="text" id="skills" placeholder="e.g. Python, SQL, React">
+                    </div>
+
+                    <div class="form-group row">
+                        <div>
+                            <label for="experience">Experience (Years)</label>
+                            <input type="number" id="experience" step="0.5" min="0" max="30" value="0">
+                        </div>
+                        <div>
+                            <label for="education">Education</label>
+                            <select id="education">
+                                <option value="Bachelors">Bachelors</option>
+                                <option value="Masters">Masters</option>
+                                <option value="PhD">PhD</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="btn-submit">
+                    <span id="btn-text">Sign In</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- API Client & Landing Page logic -->
+    <script src="js/api.js?v=1.1"></script>
+    <script src="js/landing.js?v=1.1"></script>
+</body>
+</html>

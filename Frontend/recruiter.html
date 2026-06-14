@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruitment Dashboard - Interview Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">🚀 Recruitment Dashboard</div>
+        <div class="nav-user">
+            <span id="user-role-badge" class="badge" style="background: rgba(255,255,255,0.1); color: white;">Recruiter</span>
+            <span id="user-display">Loading...</span>
+            <button class="btn-logout" onclick="handleLogout()">Sign Out</button>
+        </div>
+    </header>
+
+    <div class="dashboard-wrapper">
+        
+        <!-- Alerts -->
+        <div id="dashboard-alert" class="alert-banner"></div>
+
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h2>Interview & Candidate Management</h2>
+                <p>Track metrics, schedule interview rounds, rate candidates, and generate AI insights.</p>
+            </div>
+            <div id="recruiter-actions">
+                <button class="btn-primary" onclick="openScheduleModal()">Schedule New Interview</button>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" id="tab-stats" onclick="switchTab('stats')">Overview Stats</button>
+            <button class="tab-btn" id="tab-interviews" onclick="switchTab('interviews')">Interviews List</button>
+            <button class="tab-btn" id="tab-reports" onclick="switchTab('reports')">Evaluation Reports</button>
+            <button class="tab-btn" id="tab-team" onclick="switchTab('team')">Team Management</button>
+        </div>
+
+        <!-- Tab 1: Stats Overview -->
+        <div id="content-stats" class="tab-content active">
+            <div class="stats-grid">
+                <div class="stat-card glass-container">
+                    <div class="stat-info">
+                        <h4>Total Candidates</h4>
+                        <p id="stat-candidates">0</p>
+                    </div>
+                    <div class="stat-icon">👥</div>
+                </div>
+                <div class="stat-card glass-container">
+                    <div class="stat-info">
+                        <h4>Total Interviews</h4>
+                        <p id="stat-interviews">0</p>
+                    </div>
+                    <div class="stat-icon">📅</div>
+                </div>
+                <div class="stat-card glass-container">
+                    <div class="stat-info">
+                        <h4>Scheduled (Pending)</h4>
+                        <p id="stat-pending">0</p>
+                    </div>
+                    <div class="stat-icon">🕒</div>
+                </div>
+                <div class="stat-card glass-container">
+                    <div class="stat-info">
+                        <h4>Evaluated (Completed)</h4>
+                        <p id="stat-completed">0</p>
+                    </div>
+                    <div class="stat-icon">✅</div>
+                </div>
+            </div>
+
+            <!-- Distribution Charts/Summaries -->
+            <div class="dashboard-grid">
+                <div class="glass-container panel-card">
+                    <div class="panel-header">
+                        <h3>Selection Prediction Distribution</h3>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 20px; padding: 10px 0;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>Highly Likely to Select</span>
+                                <span id="dist-high-count" style="font-weight: bold;">0</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="dist-high-bar" style="background: var(--status-high); width: 0%;"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>Moderately Likely to Select</span>
+                                <span id="dist-mod-count" style="font-weight: bold;">0</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="dist-mod-bar" style="background: var(--status-mod); width: 0%;"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>Low Selection Probability</span>
+                                <span id="dist-low-count" style="font-weight: bold;">0</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="dist-low-bar" style="background: var(--status-low); width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-container panel-card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                    <div style="font-size: 4rem; margin-bottom: 15px;">🤖</div>
+                    <h3>AI & ML Assessment Engine</h3>
+                    <p style="color: var(--text-secondary); max-width: 320px; line-height: 1.5; margin-top: 10px;">
+                        The system uses a Random Forest Classifier trained on years of recruitment data to output candidates' probabilities, while Gemini generates comprehensive performance summaries.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Interviews List -->
+        <div id="content-interviews" class="tab-content">
+            <div class="glass-container panel-card">
+                <div class="panel-header">
+                    <h3>All Interviews</h3>
+                    <span id="interview-badge-count" class="badge badge-scheduled">0 Total</span>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Candidate</th>
+                                <th>Interviewer</th>
+                                <th>Position</th>
+                                <th>Date & Time</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="interviews-list-body">
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: var(--text-secondary);">Loading interviews...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Evaluation Reports Archive -->
+        <div id="content-reports" class="tab-content">
+            <div class="glass-container panel-card">
+                <div class="panel-header">
+                    <h3>Completed Candidate Evaluations</h3>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Candidate</th>
+                                <th>Position</th>
+                                <th>Technical Score</th>
+                                <th>Communication</th>
+                                <th>ML Prediction</th>
+                                <th>Probability</th>
+                                <th style="text-align: right;">Reports</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reports-list-body">
+                            <tr>
+                                <td colspan="7" style="text-align: center; color: var(--text-secondary);">No completed evaluations found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Team Management -->
+        <div id="content-team" class="tab-content">
+            <div class="glass-container panel-card">
+                <div class="panel-header">
+                    <h3>Team Directory</h3>
+                    <button class="btn-primary" onclick="openTeamModal()">Add Team Member</button>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody id="team-list-body">
+                            <tr>
+                                <td colspan="3" style="text-align: center; color: var(--text-secondary);">Loading team directory...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modals Section -->
+    
+    <!-- 1. Schedule Interview Modal -->
+    <div id="schedule-modal" class="modal-overlay">
+        <div class="modal-content glass-container">
+            <button class="btn-close-modal" onclick="closeScheduleModal()">×</button>
+            <h3 style="margin-bottom: 20px; font-size: 1.5rem;">Schedule New Interview Round</h3>
+            
+            <form id="schedule-form" onsubmit="handleScheduleSubmit(event)">
+                <div class="form-group">
+                    <label for="sched-candidate">Select Candidate</label>
+                    <select id="sched-candidate" required>
+                        <option value="">Choose candidate...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sched-interviewer">Select Interviewer</label>
+                    <select id="sched-interviewer" required>
+                        <option value="">Choose interviewer...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sched-position">Position / Role</label>
+                    <input type="text" id="sched-position" required placeholder="e.g. Senior Software Engineer">
+                </div>
+
+                <div class="form-group">
+                    <label for="sched-time">Scheduled Date & Time</label>
+                    <input type="datetime-local" id="sched-time" required>
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top: 10px;">Schedule Interview</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. Candidate Evaluation Form Modal -->
+    <div id="evaluation-modal" class="modal-overlay">
+        <div class="modal-content glass-container" style="max-width: 650px;">
+            <button class="btn-close-modal" onclick="closeEvaluationModal()">×</button>
+            <h3 style="margin-bottom: 20px; font-size: 1.5rem;">Submit Interview Feedback & Run AI</h3>
+            
+            <div style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-glass);">
+                <p><strong>Candidate:</strong> <span id="eval-cand-name">-</span></p>
+                <p><strong>Experience:</strong> <span id="eval-cand-exp">-</span> | <strong>Education:</strong> <span id="eval-cand-edu">-</span></p>
+                <p><strong>Position:</strong> <span id="eval-position">-</span></p>
+            </div>
+
+            <form id="evaluation-form" onsubmit="handleEvaluationSubmit(event)">
+                <input type="hidden" id="eval-interview-id">
+                
+                <div class="form-group row">
+                    <div>
+                        <label for="eval-tech-score">Technical Score (0-100)</label>
+                        <input type="number" id="eval-tech-score" min="0" max="100" required placeholder="e.g. 85">
+                    </div>
+                    <div>
+                        <label for="eval-skills-score">Skills Match Score (0-100)</label>
+                        <input type="number" id="eval-skills-score" min="0" max="100" required placeholder="e.g. 90">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div>
+                        <label for="eval-comm-rating">Communication Rating (1-5)</label>
+                        <select id="eval-comm-rating" required>
+                            <option value="5">5 - Excellent</option>
+                            <option value="4">4 - Good</option>
+                            <option value="3">3 - Satisfactory</option>
+                            <option value="2">2 - Below Average</option>
+                            <option value="1">1 - Poor</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="eval-prev-performance">Previous Round Rating (1-5)</label>
+                        <select id="eval-prev-performance" required>
+                            <option value="5">5 - Outstanding</option>
+                            <option value="4">4 - Good</option>
+                            <option value="3">3 - Average</option>
+                            <option value="2">2 - Weak</option>
+                            <option value="1">1 - Poor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="eval-comments">Interview Feedback Comments</label>
+                    <textarea id="eval-comments" rows="3" required placeholder="Write detailed candidate strengths and weaknesses observed..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top: 10px;">Run Al & Submit Evaluation</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. View AI Report Modal -->
+    <div id="report-view-modal" class="modal-overlay">
+        <div class="modal-content glass-container" style="max-width: 700px;">
+            <button class="btn-close-modal" onclick="closeReportViewModal()">×</button>
+            <h3 style="margin-bottom: 20px; font-size: 1.5rem; background: var(--grad-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AI-Generated Evaluation Report</h3>
+            
+            <div id="report-modal-header" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-glass);">
+                <p><strong>Candidate:</strong> <span id="report-cand-name">-</span></p>
+                <p><strong>Position:</strong> <span id="report-position">-</span></p>
+            </div>
+
+            <!-- Prediction probability preview inside report modal -->
+            <div class="prediction-box">
+                <h4 id="report-prediction-outcome">Highly Likely to Select</h4>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="report-prediction-bar" style="width: 0%;"></div>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); text-align: right;" id="report-prediction-percentage">Probability: 0%</p>
+            </div>
+
+            <!-- AI Text Sections -->
+            <div class="ai-report-box">
+                <h4>🤖 Al observations</h4>
+                <div class="ai-content">
+                    <div class="ai-section">
+                        <h5>Feedback Summary</h5>
+                        <p id="report-ai-summary">-</p>
+                    </div>
+                    <div class="ai-section">
+                        <h5>Core Strengths</h5>
+                        <p id="report-ai-strengths" style="white-space: pre-line;">-</p>
+                    </div>
+                    <div class="ai-section">
+                        <h5>Improvement Areas</h5>
+                        <p id="report-ai-improvements" style="white-space: pre-line;">-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Add Team Member Modal -->
+    <div id="team-modal" class="modal-overlay">
+        <div class="modal-content glass-container" style="max-width: 450px;">
+            <button class="btn-close-modal" onclick="closeTeamModal()">×</button>
+            <h3 style="margin-bottom: 20px; font-size: 1.5rem;">Add New Team Member</h3>
+            
+            <form id="team-form" onsubmit="handleTeamSubmit(event)">
+                <div class="form-group">
+                    <label for="team-username">Username</label>
+                    <input type="text" id="team-username" required placeholder="e.g. sarah_rec">
+                </div>
+                
+                <div class="form-group">
+                    <label for="team-email">Email Address</label>
+                    <input type="email" id="team-email" required placeholder="e.g. sarah@company.com">
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">Must end with @company.com</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="team-password">Temporary Password</label>
+                    <input type="password" id="team-password" required placeholder="••••••••">
+                </div>
+
+                <div class="form-group">
+                    <label for="team-role">Role</label>
+                    <select id="team-role" required>
+                        <option value="recruiter">Recruiter (Admin)</option>
+                        <option value="interviewer">Interviewer</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top: 10px;">Register Member</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- API and Page Logic Scripts -->
+    <script src="js/api.js?v=1.1"></script>
+    <script src="js/recruiter.js?v=1.1"></script>
+</body>
+</html>
